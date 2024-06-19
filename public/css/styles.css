@@ -1,0 +1,94 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(1, 165, 50, 0.336);
+}
+
+label {
+    display: block;
+    margin: 5px 0;
+}
+
+h1 {
+    font-size: 40px;
+    text-align: center;
+    background-color: rgb(1, 165, 50);
+    margin: 5px 0;
+    padding: 10px;
+}
+
+.container{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.container-valor{
+    border: 1px solid black;
+    padding: 10px;
+    background-color: rgba(223, 201, 5, 0.493);
+}
+
+#saldo{
+    text-align: center;
+    font-size: large;
+    padding: 0;
+}
+
+form {
+    margin: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.281);
+}
+
+form h2{
+    background-color: rgba(1, 165, 50, 0.336);
+    text-align: center;
+    padding: 5px;
+}
+
+.container-lutas{
+    margin: 10px 0px 5px 0px;
+    padding: 10px;
+}
+
+.luta{
+    border: 1px solid rgba(1, 165, 50, 0.336);
+    padding: 10px;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.radio{
+    display: flex;
+    justify-content: space-around;
+}
+
+.radio div{
+    margin-top: 5px;
+    display: flex;
+}
+
+button{
+    background-color: rgba(1, 165, 50, 0.733);
+    font-size: 20px;
+    font-weight: bold;
+    padding: 3px;
+    margin: 0 10px 20px;
+    border: 1px solid rgb(1, 112, 34);
+}
+
+@media (min-width: 600px) {
+    main{
+        width: 60%;
+        margin: auto;
+    }
+}
+
+
