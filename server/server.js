@@ -7,7 +7,7 @@ const Aposta = require('./schema'); // Importando o modelo
 
 connectDb();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -23,9 +23,9 @@ app.get('/', (req, res) => {
 // Rota para receber as apostas
 app.post('/place-bet', async (req, res) => {
     try {
-        const { nome, aposta1, aposta2, aposta3, aposta4, saldoAtual } = req.body;
+        const { nome, aposta1, aposta2, aposta3, saldoAtual } = req.body;
 
-        if (!nome || !aposta1 || !aposta2 || !aposta3 || !aposta4 || saldoAtual == null) {
+        if (!nome || !aposta1 || !aposta2 || !aposta3 || saldoAtual == null) {
             return res.status(400).json({ message: 'Dados insuficientes.' });
         }
 
@@ -34,7 +34,6 @@ app.post('/place-bet', async (req, res) => {
             aposta1,
             aposta2,
             aposta3,
-            aposta4,
             saldoAtual
         });
 

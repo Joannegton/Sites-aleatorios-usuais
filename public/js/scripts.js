@@ -3,45 +3,24 @@ document.getElementById('bet-form').addEventListener('submit', function(event) {
 
     const formData = new FormData(event.target);
     const username = 'well'; // Substitua pelo nome do usuário atual
-    const bets = [];
+    const bets = {
+        nome: username,
+        aposta1: {
+            competidor: formData.get('fight1'),
+            valor: formData.get('amount1')
+        },
+        aposta2: {
+            competidor: formData.get('fight2'),
+            valor: formData.get('amount2')
+        },
+        aposta3: {
+            competidor: formData.get('fight3'),
+            valor: formData.get('amount3')
+        },
+        saldoAtual: 100 - (parseInt(formData.get('amount1') || 0) + parseInt(formData.get('amount2') || 0) + parseInt(formData.get('amount3') || 0))
+    };
 
-    if (formData.get('fight1')) {
-        bets.push({
-            fight: 'Richard vs Victor',
-            competitor: formData.get('fight1'),
-            amount: formData.get('amount1'),
-            
-        });
-    }
-    if (formData.get('fight2')) {
-        bets.push({
-            fight: 'Ana Livia vs Adrianna',
-            competitor: formData.get('fight2'),
-            amount: formData.get('amount2'),
-            user: username
-        });
-    }
-    if (formData.get('fight3')) {
-        bets.push({
-            fight: 'Christopher vs Erik',
-            competitor: formData.get('fight3'),
-            amount: formData.get('amount3'),
-            user: username
-        });
-    }
-
-    if (bets.length === 0) {
-        alert('Você deve apostar em pelo menos uma luta.');
-        return;
-    }
-
-    const isValidAmount = (amount) => amount >= 33 && amount <= 100;
-    if (!bets.every(bet => isValidAmount(bet.amount))) {
-        alert('Valor de aposta inválido.');
-        return;
-    }
-
-    fetch('/place-bet', {
+    fetch('https://0e80-45-6-29-77.ngrok-free.app/place-bet', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
