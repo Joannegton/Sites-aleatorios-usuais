@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
 
-        fetch('https://c7e6-2804-214-8608-345c-9978-8766-460c-a67a.ngrok-free.app/place-bet', {
+        fetch('https://d2c3-2804-214-8613-330d-d9dd-d670-6adb-e89a.ngrok-free.app/place-bet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             password
         };
 
-        fetch('https://c7e6-2804-214-8608-345c-9978-8766-460c-a67a.ngrok-free.app/login', {
+        fetch('https://d2c3-2804-214-8613-330d-d9dd-d670-6adb-e89a.ngrok-free.app/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = '/aposta.html';
+                window.location.href = 'aposta.html';
             } else {
                 alert(data.message);
             }

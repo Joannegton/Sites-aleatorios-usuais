@@ -2,9 +2,6 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const { connectDb } = require('./dbConfig');
 const Aposta = require('./schema');
 const User = require('./userSchema');
@@ -13,7 +10,13 @@ connectDb();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// Configurar CORS para permitir o domínio específico
+const corsOptions = {
+    origin: 'https://d2c3-2804-214-8613-330d-d9dd-d670-6adb-e89a.ngrok-free.app',
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // Servir arquivos estáticos da pasta 'public'
@@ -23,7 +26,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
-
 
 // Rota para receber as apostas
 app.post('/place-bet', async (req, res) => {
@@ -51,7 +53,6 @@ app.post('/place-bet', async (req, res) => {
     }
 });
 
-
 // Rota para autenticação de login
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -67,21 +68,21 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Usuário não encontrado.' });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = password === user.password;
+        console.log(`Password provided: ${password}`);
+        console.log(`Stored password: ${user.password}`);
+        console.log(`Password match result: ${isMatch}`);
 
         if (!isMatch) {
             return res.status(400).json({ message: 'Senha incorreta.' });
         }
 
-        const token = jwt.sign({ userId: user._id }, 'secret_key', { expiresIn: '1h' });
-
-        res.json({ success: true, token });
+        res.json({ success: true, message: 'Login efetuado com sucesso!'});
     } catch (error) {
         console.error('Erro ao fazer login:', error);
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
-
 
 // Rota para cadastro de usuário
 app.post('/register', async (req, res) => {
@@ -98,11 +99,9 @@ app.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Usuário já existe.' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newUser = new User({
             username,
-            password: hashedPassword
+            password
         });
 
         await newUser.save();
@@ -112,7 +111,6 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
-
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
