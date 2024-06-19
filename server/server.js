@@ -1,11 +1,15 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const { placeBet, getUser } = require('./db');
+const { connectDb } = require('./dbConfig');
+const Aposta = require('./schema'); // Importando o modelo
 
+connectDb();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 // Servir arquivos estáticos da pasta 'public'
@@ -18,36 +22,31 @@ app.get('/', (req, res) => {
 
 // Rota para receber as apostas
 app.post('/place-bet', async (req, res) => {
-   /* const { competitors, amount } = req.body;
+    try {
+        const { nome, aposta1, aposta2, aposta3, aposta4, saldoAtual } = req.body;
 
-    if (competitors.length === 0) {
-        return res.json({ message: 'Você pode apostar apenas em até 2 concorrentes.' });
+        if (!nome || !aposta1 || !aposta2 || !aposta3 || !aposta4 || saldoAtual == null) {
+            return res.status(400).json({ message: 'Dados insuficientes.' });
+        }
+
+        const novaAposta = new Aposta({
+            nome,
+            aposta1,
+            aposta2,
+            aposta3,
+            aposta4,
+            saldoAtual
+        });
+
+        await novaAposta.save();
+        res.json({ message: 'Apostas realizadas com sucesso!' });
+
+    } catch (error) {
+        console.error('Erro ao processar as apostas:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
     }
-
-    const user = await getUser(1); // Pega o usuário com id 1 (simulado)
-    if (user.balance < amount) {
-        return res.json({ message: 'Saldo insuficiente!' });
-    }
-
-    await placeBet(user.id, competitors, amount);
-    res.json({ message: 'Aposta realizada com sucesso!' }); */
-
-    const bets = req.body;
-    console.log('Apostas recebidas:', bets);
-
-    if (!Array.isArray(bets) || bets.length === 0) {
-        return res.status(400).json({ message: 'Nenhuma aposta enviada.' });
-    }
-
-    // Adicione aqui a lógica para processar as apostas
-    // Por exemplo, salvar as apostas em um banco de dados
-
-    res.json({ message: 'Apostas recebidas com sucesso!' });
-   
 });
 
-
-
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });

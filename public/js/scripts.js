@@ -10,7 +10,7 @@ document.getElementById('bet-form').addEventListener('submit', function(event) {
             fight: 'Richard vs Victor',
             competitor: formData.get('fight1'),
             amount: formData.get('amount1'),
-            user: username
+            
         });
     }
     if (formData.get('fight2')) {
