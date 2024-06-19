@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             password
         };
 
-        fetch('https://0e80-45-6-29-77.ngrok-free.app/register', {
+        fetch('https://c7e6-2804-214-8608-345c-9978-8766-460c-a67a.ngrok-free.app/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
