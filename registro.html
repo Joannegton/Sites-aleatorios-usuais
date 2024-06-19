@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Betting Fight</title>
+    <title>Cadastro - Betting Fight</title>
     <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body>
-    <h1>Login - Betting Fight</h1>
+    <h1>Cadastro - Betting Fight</h1>
     <main>
-        <form id="login-form">
-            <h2>Faça seu Login</h2>
+        <form id="register-form">
+            <h2>Faça seu Cadastro</h2>
             <div class="container-login">
                 <div class="input-group">
                     <label for="username">Usuário:</label>
@@ -20,10 +20,14 @@
                     <label for="password">Senha:</label>
                     <input type="password" id="password" name="password" required><br>
                 </div>
-                <button type="submit" id="button">Entrar</button>
+                <div class="input-group">
+                    <label for="confirm-password">Repita a Senha:</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required><br>
+                </div>
+                <button type="submit" id="button">Cadastrar</button>
             </div>
         </form>
     </main>
-    <script src="/public/js/login.js"></script>
+    <script src="/public/js/register.js"></script>
 </body>
 </html>

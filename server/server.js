@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { connectDb } = require('./dbConfig');
 const Aposta = require('./schema');
-const User = require('./userSchema'); 
+const User = require('./userSchema');
 
 connectDb();
 const app = express();
@@ -26,6 +26,10 @@ app.get('/', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'register.html'));
 });
 
 // Rota para receber as apostas
@@ -81,6 +85,37 @@ app.post('/login', async (req, res) => {
         res.json({ success: true, token });
     } catch (error) {
         console.error('Erro ao fazer login:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
+    }
+});
+
+
+// Rota para cadastro de usuário
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Dados insuficientes.' });
+    }
+
+    try {
+        const existingUser = await User.findOne({ username });
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'Usuário já existe.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new User({
+            username,
+            password: hashedPassword
+        });
+
+        await newUser.save();
+        res.json({ success: true, message: 'Usuário cadastrado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao cadastrar usuário:', error);
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
