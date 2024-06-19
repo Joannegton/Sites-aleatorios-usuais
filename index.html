@@ -1,84 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betting Fight</title>
-    <link rel="stylesheet" href="/public/css/styles.css">
-</head>
-<body>
-    <h1>Betting Fight</h1>
-    <main>
-        <div class="container">
-            <h3>Bem-vindo ao Betting Fight</h3>
-            <div class="container-valor">
-                <p style="font-weight: bold;">Saldo disponível</p>
-                <p id="saldo">R$<span id="saldo-valor">100</span></p>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Betting Fight</title>
+        <link rel="stylesheet" href="/public/css/styles.css">
+    </head>
+    <body>
+        <h1>Betting Fight</h1>
+        <main>
+            <div class="container">
+                <h3>Bem-vindo ao Betting Fight</h3>
+                <div class="container-valor">
+                    <p style="font-weight: bold;">Saldo disponível</p>
+                    <p id="saldo">R$<span id="saldo-valor">100</span></p>
+                </div>
             </div>
-        </div>
+            
+            <form id="bet-form">
+                <h2>Realize sua Aposta</h2>
         
-        <form id="bet-form">
-            <h2>Realize sua Aposta</h2>
-    
-            <div class="container-lutas">
-                <div class="luta">
-                    <h3>Richard vs Victor</h3>
-                    <div class="radio">
-                        <div>
-                            <label for="richard">Richard:</label>
-                            <input type="radio" id="richard" name="fight1" value="Richard"><br>    
+                <div class="container-lutas">
+                    <div class="luta">
+                        <h3>Richard vs Victor</h3>
+                        <div class="radio">
+                            <div>
+                                <label for="richard">Richard:</label>
+                                <input type="radio" id="richard" name="fight1" value="Richard"><br>    
+                            </div>
+                            <div>
+                                <label for="victor">Victor:</label>
+                                <input type="radio" id="victor" name="fight1" value="Victor"><br>                   
+                            </div>
+                            <div>
+                                <label for="amount1">Valor da Aposta:</label>
+                                <input type="number" id="amount1" name="amount1"><br>
+                            </div>
                         </div>
-                        <div>
-                            <label for="victor">Victor:</label>
-                            <input type="radio" id="victor" name="fight1" value="Victor"><br>                   
-                        </div>
-                        <div>
-                            <label for="amount1">Valor da Aposta:</label>
-                            <input type="number" id="amount1" name="amount1"><br>
+                        
+                    </div>
+                    <div class="luta">
+                        <h3>Ana Livia vs Adrianna</h3>
+                        <div class="radio">
+                            <div>
+                                <label for="ana-livia">Ana Livia:</label>
+                                <input type="radio" id="ana-livia" name="fight2" value="Ana Livia"><br>
+                            </div>
+                            <div>
+                                <label for="adrianna">Adrianna:</label>
+                                <input type="radio" id="adrianna" name="fight2" value="Adrianna"><br>                
+                            </div>
+                            <div>
+                                <label for="amount2">Valor da Aposta:</label>
+                                <input type="number" id="amount2" name="amount2"><br>            
+                            </div>
                         </div>
                     </div>
-                    
-                </div>
-                <div class="luta">
-                    <h3>Ana Livia vs Adrianna</h3>
-                    <div class="radio">
-                        <div>
-                            <label for="ana-livia">Ana Livia:</label>
-                            <input type="radio" id="ana-livia" name="fight2" value="Ana Livia"><br>
-                        </div>
-                        <div>
-                            <label for="adrianna">Adrianna:</label>
-                            <input type="radio" id="adrianna" name="fight2" value="Adrianna"><br>                
-                        </div>
-                        <div>
-                            <label for="amount2">Valor da Aposta:</label>
-                            <input type="number" id="amount2" name="amount2"><br>            
-                        </div>
-                    </div>
-                </div>
-                <div class="luta">
-                    <h3>Christopher vs Erik</h3>
-                    <div class="radio">
-                        <div>
-                            <label for="christopher">Christopher:</label>
-                            <input type="radio" id="christopher" name="fight3" value="Christopher"><br>
-                         </div>
-                        <div>
-                            <label for="erik">Erik:</label>
-                            <input type="radio" id="erik" name="fight3" value="Erik"><br>
-                        </div>
-                        <div>
-                            <label for="amount3">Valor da Aposta:</label>
-                            <input type="number" id="amount3" name="amount3"><br>               
+                    <div class="luta">
+                        <h3>Christopher vs Erik</h3>
+                        <div class="radio">
+                            <div>
+                                <label for="christopher">Christopher:</label>
+                                <input type="radio" id="christopher" name="fight3" value="Christopher"><br>
+                             </div>
+                            <div>
+                                <label for="erik">Erik:</label>
+                                <input type="radio" id="erik" name="fight3" value="Erik"><br>
+                            </div>
+                            <div>
+                                <label for="amount3">Valor da Aposta:</label>
+                                <input type="number" id="amount3" name="amount3"><br>               
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+        
+                <button type="submit" id="submit-button">Fazer Aposta</button>
+            </form>
+        </main>
+        
+        <script src="/public/js/scripts.js"></script>
+    </body>
+    </html>
     
-            <button type="submit" id="submit-button">Fazer Aposta</button>
-        </form>
-    </main>
-    
-    <script src="/public/js/scripts.js"></script>
-</body>
-</html>
