@@ -1,40 +1,27 @@
 const { Schema, model } = require('mongoose');
 
 const apostaSchema = new Schema({
-    nome: {
-        type: String,
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    aposta1: {
-        competidor: {
+    lutas: [{
+        lutaId: {
             type: String,
             required: true
         },
-        valor: {
-            type: Number,
-            required: true
+        aposta: {
+            competidor: {
+                type: String,
+                required: true
+            },
+            valor: {
+                type: Number,
+                required: true
+            }
         }
-    },
-    aposta2: {
-        competidor: {
-            type: String,
-            required: true
-        },
-        valor: {
-            type: Number,
-            required: true
-        }
-    },
-    aposta3: {
-        competidor: {
-            type: String,
-            required: true
-        },
-        valor: {
-            type: Number,
-            required: true
-        }
-    },
+    }],
     saldoAtual: {
         type: Number,
         required: true

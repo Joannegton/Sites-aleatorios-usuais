@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             password
         };
 
-        fetch(' https://71f5-201-55-46-78.ngrok-free.app/register', {
+        fetch('https://71f5-201-55-46-78.ngrok-free.app/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = 'index.html'; 
-                console.log(registerData)
+                window.location.href = 'index.html'; // Redirecionar para a página principal após o cadastro
+                console.log(registerData);
             } else {
                 alert(data.message);
             }

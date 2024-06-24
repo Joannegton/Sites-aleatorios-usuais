@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+    <title>Admin - Betting Fight</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Admin Page</h1>
-    <form id="winner-form">
-        <label for="fightId">ID da Luta:</label>
-        <input type="text" id="fightId" name="fightId" required>
-        <label for="winner">Vencedor:</label>
-        <input type="text" id="winner" name="winner" required>
-        <button type="submit">Atualizar Vencedor e Distribuir Ganhos</button>
-    </form>
-    <div id="result"></div>
+    <h1>Admin - Betting Fight</h1>
+    <main>
+        <div id="apostas-container"></div>
+        <form id="winner-form">
+            <h2>Definir Vencedor</h2>
+            <label for="lutaId">ID da Luta:</label>
+            <input type="text" id="lutaId" name="lutaId" required>
+            <label for="competidorVencedor">Competidor Vencedor:</label>
+            <input type="text" id="competidorVencedor" name="competidorVencedor" required>
+            <button type="submit">Definir Vencedor</button>
+        </form>
+    </main>
     <script src="js/admin.js"></script>
 </body>
 </html>

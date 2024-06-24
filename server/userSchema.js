@@ -10,6 +10,10 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    saldo: {
+        type: Number,
+        default: 100 // Defina o saldo inicial como 100
     }
 });
 

@@ -53,26 +53,22 @@ app.get('/get-user/:id', async (req, res) => {
 // Rota para receber as apostas
 app.post('/place-bet', async (req, res) => {
     try {
-        const { nome, aposta1, aposta2, aposta3, saldoAtual, userId } = req.body;
-
-        if (!nome || !aposta1 || !aposta2 || !aposta3 || saldoAtual == null) {
-            return res.status(400).json({ message: 'Dados insuficientes.' });
-        }
-
+        const { userId, apostas, saldoAtual } = req.body;
+        console.log('Dados recebidos:', { userId, apostas, saldoAtual });
         const novaAposta = new Aposta({
-            nome,
-            aposta1,
-            aposta2,
-            aposta3,
-            saldoAtual,
-            userId
+            userId,
+            lutas: apostas,
+            saldoAtual
         });
 
         await novaAposta.save();
-        res.json({ message: 'Apostas realizadas com sucesso!' });
 
+        // Atualizar o saldo do usuário no banco de dados
+        await User.findByIdAndUpdate(userId, { saldo: saldoAtual });
+
+        res.status(201).json({ message: 'Apostas registradas com sucesso!' });
     } catch (error) {
-        console.error('Erro ao processar as apostas:', error);
+        console.error('Erro ao registrar apostas:', error);
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
@@ -163,25 +159,28 @@ app.post('/distribute-winnings', async (req, res) => {
 
 app.post('/update-winner', async (req, res) => {
     try {
-        const { fightId, winner } = req.body;
+        const { lutaId, winner } = req.body;
 
-        // Distribuir os ganhos para os apostadores que apostaram no vencedor
-        const apostas = await Aposta.find({ [`aposta${fightId}.competidor`]: winner });
+        // Coletar todas as apostas para a luta especificada
+        const apostas = await Aposta.find({ 'lutas.lutaId': lutaId, 'lutas.competidor': winner });
 
         let totalApostas = 0;
         apostas.forEach(aposta => {
-            totalApostas += aposta[`aposta${fightId}`].valor;
+            const luta = aposta.lutas.find(l => l.lutaId === lutaId && l.competidor === winner);
+            totalApostas += luta.valor;
         });
 
         const distribuicoes = [];
 
-        apostas.forEach(async aposta => {
+        // Distribuir ganhos proporcionalmente
+        for (const aposta of apostas) {
             const user = await User.findById(aposta.userId);
-            const ganho = (aposta[`aposta${fightId}`].valor / totalApostas) * totalApostas;
+            const luta = aposta.lutas.find(l => l.lutaId === lutaId && l.competidor === winner);
+            const ganho = (luta.valor / totalApostas) * totalApostas;
             user.saldo += ganho;
             await user.save();
             distribuicoes.push({ userId: user._id, ganho });
-        });
+        }
 
         res.json({ message: 'Vencedor atualizado e ganhos distribuídos com sucesso!', distribuicoes });
     } catch (error) {
@@ -189,6 +188,46 @@ app.post('/update-winner', async (req, res) => {
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
+
+app.get('/admin/apostas', async (req, res) => {
+    try {
+        const apostas = await Aposta.find().populate('userId', 'username saldo');
+        res.json(apostas);
+    } catch (error) {
+        console.error('Erro ao obter apostas:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
+    }
+});
+
+app.post('/admin/definir-vencedor', async (req, res) => {
+    try {
+        const { lutaId, competidorVencedor } = req.body;
+
+        const apostas = await Aposta.find({ "lutas.competidor": competidorVencedor });
+
+        // Calcula os ganhos e atualiza o saldo dos usuários
+        let totalValorApostado = 0;
+        apostas.forEach(aposta => {
+            const luta = aposta.lutas.find(l => l.competidor === competidorVencedor);
+            totalValorApostado += luta.valor;
+        });
+
+        apostas.forEach(async (aposta) => {
+            const luta = aposta.lutas.find(l => l.competidor === competidorVencedor);
+            const ganho = (luta.valor / totalValorApostado) * totalValorApostado; // Ajustar se houver uma porcentagem de lucro
+            const usuario = await User.findById(aposta.userId);
+            usuario.saldo += ganho;
+            await usuario.save();
+        });
+
+        res.json({ message: 'Vencedores definidos e ganhos distribuídos!' });
+    } catch (error) {
+        console.error('Erro ao definir vencedor:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
+    }
+});
+
+
 
 
 app.listen(PORT, () => {
