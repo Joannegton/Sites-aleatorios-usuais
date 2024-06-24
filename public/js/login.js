@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             password
         };
 
-        fetch('https://d2c3-2804-214-8613-330d-d9dd-d670-6adb-e89a.ngrok-free.app/login', {
+        fetch('https://71f5-201-55-46-78.ngrok-free.app/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Salva o ID do usuário no localStorage
+                localStorage.setItem('userId', data.userId);
                 window.location.href = 'aposta.html';
             } else {
                 alert(data.message);

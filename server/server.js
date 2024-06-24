@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 // Configurar CORS para permitir o domínio específico
 const corsOptions = {
-    origin: 'https://d2c3-2804-214-8613-330d-d9dd-d670-6adb-e89a.ngrok-free.app',
+    origin: ' https://71f5-201-55-46-78.ngrok-free.app',
     optionsSuccessStatus: 200
 };
 
@@ -25,6 +25,25 @@ app.use(express.static(path.join(__dirname, '../public')));
 // Rota para servir o arquivo HTML principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+
+
+// Rota para pegar usuário pelo ID
+app.get('/get-user/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Erro ao pegar usuário:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
+    }
 });
 
 // Rota para receber as apostas
@@ -69,15 +88,12 @@ app.post('/login', async (req, res) => {
         }
 
         const isMatch = password === user.password;
-        console.log(`Password provided: ${password}`);
-        console.log(`Stored password: ${user.password}`);
-        console.log(`Password match result: ${isMatch}`);
 
         if (!isMatch) {
             return res.status(400).json({ message: 'Senha incorreta.' });
         }
 
-        res.json({ success: true, message: 'Login efetuado com sucesso!'});
+        res.json({ success: true, message: 'Login efetuado com sucesso!', userId: user._id });
     } catch (error) {
         console.error('Erro ao fazer login:', error);
         res.status(500).json({ message: 'Erro interno no servidor.' });
