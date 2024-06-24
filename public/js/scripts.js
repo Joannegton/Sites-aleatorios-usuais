@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputs = form.querySelectorAll('input[type="number"]');
     const submitButton = document.getElementById('submit-button');
 
-    // Recupera o ID do usuário do localStorage
     const userId = localStorage.getItem('userId');
 
     if (!userId) {
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Obter informações do usuário
     fetch(`https://71f5-201-55-46-78.ngrok-free.app/get-user/${userId}`, {
         method: 'GET',
         headers: {
@@ -23,10 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(response => response.json())
     .then(user => {
-        const nomeUsuario = user.username; // Atribuir o nome do usuário
-        // Preencher outros campos se necessário
+        const nomeUsuario = user.username;
 
-        // Resto do código para lidar com apostas
         function atualizarSaldo() {
             let totalAposta = 0;
             inputs.forEach(input => {
@@ -102,11 +98,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(betData)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 alert(data.message);
-                form.reset(); // Limpar o formulário
-                saldoElemento.textContent = saldoInicial; // Resetar o saldo
+                form.reset();
+                saldoElemento.textContent = saldoInicial;
             })
             .catch(error => {
                 console.error('Erro:', error);
@@ -119,8 +120,3 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Ocorreu um erro ao obter as informações do usuário. Tente novamente.');
     });
 });
-
-console.log('Login data:', loginData);
-console.log('Bet data:', betData);
-console.log('User data:', user);
-console.log('User ID:', userId);

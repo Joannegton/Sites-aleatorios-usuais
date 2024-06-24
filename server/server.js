@@ -26,6 +26,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
+// Rota para servir a página HTML de administrador
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'admin.html'));
+});
 
 
 // Rota para pegar usuário pelo ID
@@ -49,7 +53,7 @@ app.get('/get-user/:id', async (req, res) => {
 // Rota para receber as apostas
 app.post('/place-bet', async (req, res) => {
     try {
-        const { nome, aposta1, aposta2, aposta3, saldoAtual } = req.body;
+        const { nome, aposta1, aposta2, aposta3, saldoAtual, userId } = req.body;
 
         if (!nome || !aposta1 || !aposta2 || !aposta3 || saldoAtual == null) {
             return res.status(400).json({ message: 'Dados insuficientes.' });
@@ -60,7 +64,8 @@ app.post('/place-bet', async (req, res) => {
             aposta1,
             aposta2,
             aposta3,
-            saldoAtual
+            saldoAtual,
+            userId
         });
 
         await novaAposta.save();
@@ -71,6 +76,7 @@ app.post('/place-bet', async (req, res) => {
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
+
 
 // Rota para autenticação de login
 app.post('/login', async (req, res) => {
@@ -127,6 +133,63 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: 'Erro interno no servidor.' });
     }
 });
+
+app.post('/distribute-winnings', async (req, res) => {
+    try {
+        const { fightId, winner } = req.body;
+
+        const apostas = await Aposta.find({ [`aposta${fightId}.competidor`]: winner });
+
+        let totalApostas = 0;
+        apostas.forEach(aposta => {
+            totalApostas += aposta[`aposta${fightId}`].valor;
+        });
+
+        apostas.forEach(async aposta => {
+            const user = await User.findById(aposta.userId);
+            const ganho = (aposta[`aposta${fightId}`].valor / totalApostas) * totalApostas;
+            user.saldo += ganho;
+            await user.save();
+        });
+
+        res.json({ message: 'Ganhos distribuídos com sucesso!' });
+
+    } catch (error) {
+        console.error('Erro ao distribuir ganhos:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
+    }
+});
+
+
+app.post('/update-winner', async (req, res) => {
+    try {
+        const { fightId, winner } = req.body;
+
+        // Distribuir os ganhos para os apostadores que apostaram no vencedor
+        const apostas = await Aposta.find({ [`aposta${fightId}.competidor`]: winner });
+
+        let totalApostas = 0;
+        apostas.forEach(aposta => {
+            totalApostas += aposta[`aposta${fightId}`].valor;
+        });
+
+        const distribuicoes = [];
+
+        apostas.forEach(async aposta => {
+            const user = await User.findById(aposta.userId);
+            const ganho = (aposta[`aposta${fightId}`].valor / totalApostas) * totalApostas;
+            user.saldo += ganho;
+            await user.save();
+            distribuicoes.push({ userId: user._id, ganho });
+        });
+
+        res.json({ message: 'Vencedor atualizado e ganhos distribuídos com sucesso!', distribuicoes });
+    } catch (error) {
+        console.error('Erro ao atualizar vencedor:', error);
+        res.status(500).json({ message: 'Erro interno no servidor.' });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
